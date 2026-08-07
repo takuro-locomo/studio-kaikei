@@ -1,0 +1,31 @@
+# 認証情報（絶対にコミットしない）
+*.json
+!package.json
+!package-lock.json
+credentials/
+service-account*.json
+.env
+.env.*
+
+# 証凭ファイルはドライブに置く
+receipts/
+*.pdf
+*.jpg
+*.jpeg
+*.png
+*.heic
+
+# 台帳データをリポジトリに持たない
+*.csv
+*.xlsx
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS / エディタ
+.DS_Store
+.vscode/
+.idea/
