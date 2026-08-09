@@ -7,12 +7,15 @@
 
 必要な環境変数:
     SHEET_ID                        スプレッドシート ID
-    GOOGLE_APPLICATION_CREDENTIALS  サービスアカウント JSON キーのパス
+    認証はどちらか一方:
+    GOOGLE_SERVICE_ACCOUNT_JSON     サービスアカウント JSON キーの中身（クラウド環境向け）
+    GOOGLE_APPLICATION_CREDENTIALS  サービスアカウント JSON キーのパス（手元の端末向け）
 
 注意: I 列（残高）は数式なので A〜H の 8 列だけを書く。
 """
 
 import argparse
+import json
 import os
 import sys
 
@@ -59,6 +62,19 @@ def validate(a):
         sys.exit("エラー: 金額は 1 以上にしてください")
 
 
+def load_credentials():
+    key_json = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON")
+    if key_json:
+        return Credentials.from_service_account_info(json.loads(key_json), scopes=SCOPES)
+    key_path = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+    if key_path:
+        return Credentials.from_service_account_file(key_path, scopes=SCOPES)
+    sys.exit(
+        "エラー: GOOGLE_SERVICE_ACCOUNT_JSON（キーの中身）か "
+        "GOOGLE_APPLICATION_CREDENTIALS（キーのパス）を環境変数に設定してください"
+    )
+
+
 def main():
     a = parse_args()
     validate(a)
@@ -79,11 +95,10 @@ def main():
         return
 
     sheet_id = os.environ.get("SHEET_ID")
-    key_path = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
-    if not sheet_id or not key_path:
-        sys.exit("エラー: SHEET_ID と GOOGLE_APPLICATION_CREDENTIALS を環境変数に設定してください")
+    if not sheet_id:
+        sys.exit("エラー: SHEET_ID を環境変数に設定してください")
 
-    creds = Credentials.from_service_account_file(key_path, scopes=SCOPES)
+    creds = load_credentials()
     values = build("sheets", "v4", credentials=creds).spreadsheets().values()
 
     result = values.append(

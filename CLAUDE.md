@@ -84,15 +84,21 @@
 
 - サービスアカウントの JSON キーは絶対にコミットしない
 - スプレッドシート ID もこのリポジトリに書かない。環境変数で渡す
-- 使う環境変数：`SHEET_ID` と `GOOGLE_APPLICATION_CREDENTIALS`
+- 使う環境変数：`SHEET_ID` と、認証はどちらか一方
+  - `GOOGLE_SERVICE_ACCOUNT_JSON`：キー JSON の中身をそのまま入れる（スマホ・Web のクラウド環境向け）
+  - `GOOGLE_APPLICATION_CREDENTIALS`：キー JSON ファイルのパス（手元の端末向け）
 
 ## セットアップ（人間が手でやる）
 
 1. Google Cloud で Google Sheets API を有効化し、サービスアカウントを作成する
-2. JSON キーを発行し、端末のリポジトリ外の場所に置く
+2. JSON キーを発行する
 3. スプレッドシートの共有に、そのサービスアカウントのメールアドレスを編集者として追加する
-4. `SHEET_ID` と `GOOGLE_APPLICATION_CREDENTIALS` を環境変数に設定する
-5. `pip install google-api-python-client google-auth`
+4. 環境変数を設定する
+   - スマホ・Web（claude.ai/code）で使う場合：claude.ai/code の環境（Environment）設定で、
+     `SHEET_ID` にスプレッドシート ID、`GOOGLE_SERVICE_ACCOUNT_JSON` にキー JSON の中身を登録する。
+     セットアップスクリプトに `pip install google-api-python-client google-auth cffi` を入れる
+   - 手元の端末で使う場合：キーをリポジトリ外に置き、`SHEET_ID` と `GOOGLE_APPLICATION_CREDENTIALS` を設定し、
+     `pip install google-api-python-client google-auth cffi` を実行する
 
 ## 注意
 
