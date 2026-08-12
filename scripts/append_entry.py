@@ -3,7 +3,7 @@
 """取引入力シートに 1 行追記する。
 
 使い方:
-    python scripts/append_entry.py --date 2026/08/07 --account "売上高（レッスン）" --partner "小林" --memo "マシン8回券 販売" --income 31680 --method "現金"
+    python scripts/append_entry.py --date 2026/08/07 --account "売上高（レッスン）" --partner "◯◯様" --memo "マシン回数券 販売" --income 12000 --method "現金"
 
 必要な環境変数:
     SHEET_ID                        スプレッドシート ID
